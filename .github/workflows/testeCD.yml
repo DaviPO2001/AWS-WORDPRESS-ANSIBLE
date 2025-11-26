@@ -1,18 +1,15 @@
 name: CD Pipeline
 
-name: CD Pipeline
-
 on:
   workflow_run:
     workflows: ["CI Pipeline"]   # só dispara depois que o CI terminar
     types:
       - completed
 
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout do código
         uses: actions/checkout@v3
