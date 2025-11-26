@@ -16,6 +16,12 @@ jobs:                    # Conjunto de jobs que serão executados
         # Essa ação oficial do GitHub baixa o código do repositório
         # para dentro do runner, permitindo que os próximos passos usem os arquivos
 
+      - name: Instalar Docker e Docker Compose via Ansible
+        uses: ansible/ansible-runner-action@v2
+        with:
+          playbook: ansible/install-docker.yml
+          inventory: ansible/inventory/hosts.ini
+
       - name: Deploy para EC2 via SSH
         uses: appleboy/ssh-action@v0.1.7
         # Essa ação conecta via SSH em um servidor remoto (sua instância EC2)
