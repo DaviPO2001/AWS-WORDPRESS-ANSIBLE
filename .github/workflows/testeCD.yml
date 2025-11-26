@@ -29,6 +29,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/app
-            git pull origin main
+            git pull wordpress teste
             docker compose pull
             docker compose up -d
