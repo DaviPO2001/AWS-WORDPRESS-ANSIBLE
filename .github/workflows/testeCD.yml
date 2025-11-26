@@ -1,3 +1,11 @@
+# Nome do workflow, aparece na aba "Actions" do GitHub
+name: CD Pipeline
+
+# Define quando o workflow será disparado
+on:
+  push:                  # dispara em eventos de push
+    branches: [ "main", "teste", "develop", "master" ] # apenas quando o push for na branch "main"
+
 jobs:
   test:
     runs-on: ubuntu-latest
