@@ -28,6 +28,9 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            apt install docker.io
+            apt install docker
+            apt install docker-compose-v2
             cd /home/ubuntu/app
             git pull wordpress teste
             docker compose pull
