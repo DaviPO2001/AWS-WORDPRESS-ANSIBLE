@@ -4,7 +4,7 @@ name: CD Pipeline
 # Define quando o workflow será disparado
 on:
   push:                  # dispara em eventos de push
-    branches: [ "main", "develop" ] # apenas quando o push for na branch "main"
+    branches: [ "main", "teste" ] # apenas quando o push for na branch "main"
 
 jobs:                    # Conjunto de jobs que serão executados
   deploy:                # Nome do job (deploy)
