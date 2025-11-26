@@ -1,40 +1,34 @@
-- name: Preparar EC2 para deploy
-  hosts: all
-  become: yes
+---
+- name: Deploy com Docker Compose via Ansible
+  hosts: servidor
+  become: true
 
   tasks:
-    - name: Atualizar pacotes
+    - name: Garantir que git está instalado
       apt:
-        update_cache: yes
+        name: git
+        state: present
+      when: ansible_os_family == "Debian"
 
-    - name: Criar pasta do projeto
-      file:
-        path: /home/ubuntu/app
-        state: directory
+    - name: Clonar ou atualizar repositório
+      git:
+        repo: "https://github.com/DaviPO2001/AWS-WORDPRESS-ANSIBLE.git"
+        dest: "/opt/app"
+        version: "main"
 
-  
-    - name: Instalar Docker
-      apt: 
+    - name: Garantir que Docker está instalado
+      apt:
         name: docker.io
         state: present
-        update_cache: yes
+      when: ansible_os_family == "Debian"
 
-    - name: Garantir que Docker está rodando
-      service:
-        name: docker
-        state: started
-        enabled: yes
+    - name: Garantir que Docker Compose está instalado
+      apt:
+        name: docker-compose
+        state: present
+      when: ansible_os_family == "Debian"
 
-    - name: Instalar Docker Compose
-      get_url:
-        url: https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-linux-x86_64
-        dest: /usr/local/bin/docker-compose
-        mode: '0755'
-
-    - name: Clonar ou atualizar repositório do projeto
-      git:
-        repo: https://github.com/DaviPO2001/AWS-WORDPRESS-ANSIBLE.git
-        dest: /home/ubuntu/app
-        version: main
-        force: yes
-        update: yes
+    - name: Subir containers com docker-compose
+      command: docker-compose up -d
+      args:
+        chdir: /opt/app
