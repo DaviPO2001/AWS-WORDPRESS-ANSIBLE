@@ -7,6 +7,11 @@
       apt:
         update_cache: yes
 
+    - name: Criar pasta do projeto
+      file:
+        path: /home/ubuntu/app
+        state: directory
+
     - name: Instalar dependências
       apt:
         name:
@@ -33,11 +38,6 @@
         url: https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-linux-x86_64
         dest: /usr/local/bin/docker-compose
         mode: '0755'
-
-    - name: Criar pasta do projeto
-      file:
-        path: /home/ubuntu/app
-        state: directory
 
 
     - name: Clonar repositório do projeto
