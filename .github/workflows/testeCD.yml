@@ -1,38 +1,32 @@
-# Nome do workflow, aparece na aba "Actions" do GitHub
 name: CD Pipeline
 
-# Define quando o workflow será disparado
 on:
-  push:                  # dispara em eventos de push
-    branches: [ "main", "teste", "develop", "master" ] # apenas quando o push for na branch "main"
+  push:
+    branches: [ "main" ]   # dispara apenas quando houver push na branch main
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Testar Docker Compose
-        run: docker compose version
-
   deploy:
     runs-on: ubuntu-latest
-    needs: test
+
     steps:
-      - name: Checkout
+      - name: Checkout do código
         uses: actions/checkout@v3
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v0.1.7
+
+      - name: Configurar Python e Ansible
+        run: |
+          sudo apt update
+          sudo apt install -y python3 python3-pip
+          pip3 install ansible
+
+      - name: Configurar inventário Ansible
+        run: |
+          echo "[servidor]" > hosts.ini
+          echo "52.15.204.67 ansible_user=ubuntu ansible_ssh_private_key_file=/home/runner/.ssh/id_rsa" >> hosts.ini
+
+      - name: Adicionar chave SSH
+        uses: webfactory/ssh-agent@v0.7.0
         with:
-          host: 52.15.204.67
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            sudo apt update
-            sudo apt install docker.io
-            sudo apt install docker
-            sudo apt install docker-compose-v2
-            cd /home/ubuntu/app
-            git pull wordpress teste
-            docker compose pull
-            docker compose up -d
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Rodar playbook Ansible
+        run: ansible-playbook -i hosts.ini deploy-wordpress.yml

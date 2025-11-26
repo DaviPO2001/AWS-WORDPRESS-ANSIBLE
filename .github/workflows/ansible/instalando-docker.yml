@@ -1,34 +1,45 @@
 ---
-- name: Deploy com Docker Compose via Ansible
+- name: Deploy WordPress com Docker Compose na AWS EC2
   hosts: servidor
   become: true
 
   tasks:
-    - name: Garantir que git está instalado
+    - name: Atualizar pacotes
       apt:
-        name: git
-        state: present
-      when: ansible_os_family == "Debian"
+        update_cache: yes
 
-    - name: Clonar ou atualizar repositório
+    - name: Instalar dependências básicas
+      apt:
+        name:
+          - git
+          - curl
+          - ca-certificates
+          - apt-transport-https
+        state: present
+
+    - name: Instalar Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Adicionar usuário ubuntu ao grupo docker
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
+
+    - name: Instalar Docker Compose Plugin (v2)
+      apt:
+        name: docker-compose-plugin
+        state: present
+
+    - name: Clonar ou atualizar repositório WordPress
       git:
         repo: "https://github.com/DaviPO2001/AWS-WORDPRESS-ANSIBLE.git"
         dest: "/opt/app"
         version: "main"
 
-    - name: Garantir que Docker está instalado
-      apt:
-        name: docker.io
+    - name: Subir containers com Docker Compose
+      community.docker.docker_compose:
+        project_src: /opt/app
         state: present
-      when: ansible_os_family == "Debian"
-
-    - name: Garantir que Docker Compose está instalado
-      apt:
-        name: docker-compose
-        state: present
-      when: ansible_os_family == "Debian"
-
-    - name: Subir containers com docker-compose
-      command: docker-compose up -d
-      args:
-        chdir: /opt/app
