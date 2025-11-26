@@ -4,7 +4,7 @@ name: CI Pipeline
 # Define os gatilhos que disparam o workflow
 on:
   push:                      # dispara quando há push
-    branches: [ "main" ]     # apenas se o push for na branch main
+    branches: [ "main","master" ]     # apenas se o push for na branch main
   pull_request:              # dispara também em pull requests
     branches: [ "main" ]     # apenas se o PR for direcionado à branch main
 
