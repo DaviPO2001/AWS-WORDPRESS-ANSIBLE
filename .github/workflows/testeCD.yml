@@ -31,5 +31,6 @@ jobs:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Rodar playbook Ansible
-        run: ansible-playbook -i ansible/inventory/hosts ansible/playbooks/instalando-docker.yml
+        run: ansible-playbook -i ansible/inventory/hosts ansible/instalando-docker.yml
+
 
