@@ -31,4 +31,4 @@ jobs:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Rodar playbook Ansible
-        run: ansible-playbook -i hosts.ini deploy-wordpress.yml
+        run: ansible-playbook -i hosts.ini instalando-docker.yml
