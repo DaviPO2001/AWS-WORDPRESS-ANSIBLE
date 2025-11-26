@@ -1,6 +1,6 @@
 ---
 - name: Deploy WordPress com Docker Compose na AWS EC2
-  hosts: servidor
+  hosts: ec2
   become: true
 
   tasks:
@@ -39,7 +39,7 @@
         dest: "/opt/app"
         version: "main"
 
-    - name: Subir containers com Docker Compose
-      community.docker.docker_compose:
+    - name: Subir containers com Docker Compose v2
+      community.docker.docker_compose_v2:
         project_src: /opt/app
         state: present

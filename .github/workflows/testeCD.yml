@@ -29,6 +29,10 @@ jobs:
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+        
+      - name: Instalar coleção community.docker
+        run: ansible-galaxy collection install community.docker
+
 
       - name: Rodar playbook Ansible
         run: ansible-playbook -i ansible/inventory/hosts ansible/instalando-docker.yml
