@@ -1,14 +1,21 @@
----
-- name: Instalar Docker e Docker Compose
+- name: Preparar EC2 para deploy
   hosts: all
   become: yes
 
   tasks:
+    - name: Atualizar pacotes
+      apt:
+        update_cache: yes
+
     - name: Instalar dependências
       apt:
-        name: [ "curl", "apt-transport-https", "ca-certificates", "software-properties-common" ]
+        name:
+          - curl
+          - git
+          - apt-transport-https
+          - ca-certificates
+          - software-properties-common
         state: present
-        update_cache: yes
 
     - name: Adicionar repositório oficial do Docker
       apt_repository:
@@ -27,5 +34,9 @@
         dest: /usr/local/bin/docker-compose
         mode: '0755'
 
-    - name: Verificar versão do Docker Compose
-      command: docker-compose --version
+    - name: Clonar repositório do projeto
+      git:
+        repo: https://github.com/DaviPO2001/AWS-WORDPRESS-ANSIBLE.git
+        dest: /home/ubuntu/app
+        version: main
+        force: yes
