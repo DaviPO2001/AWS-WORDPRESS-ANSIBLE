@@ -33,16 +33,22 @@
         state: present
         update_cache: yes
 
+    - name: Garantir que Docker está rodando
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
     - name: Instalar Docker Compose
       get_url:
         url: https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-linux-x86_64
         dest: /usr/local/bin/docker-compose
         mode: '0755'
 
-
-    - name: Clonar repositório do projeto
+    - name: Clonar ou atualizar repositório do projeto
       git:
         repo: https://github.com/DaviPO2001/AWS-WORDPRESS-ANSIBLE.git
         dest: /home/ubuntu/app
         version: main
         force: yes
+        update: yes
