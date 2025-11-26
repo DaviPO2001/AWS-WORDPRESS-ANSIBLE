@@ -20,9 +20,9 @@ jobs:                        # Conjunto de jobs que serão executados
 
       - name: Testar Docker Compose
         run: |
-          docker-compose -f docker-compose.yml config
+          docker compose -f docker-compose.yml config
           # Valida a sintaxe do arquivo docker-compose.yml
-          docker-compose -f docker-compose.yml up -d
+          docker compose -f docker-compose.yml up -d
           # Sobe os containers em segundo plano para testar se funcionam
           docker ps
           # Lista os containers rodando, garantindo que subiram corretamente
