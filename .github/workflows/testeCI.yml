@@ -1,0 +1,28 @@
+# Nome do workflow, aparece na aba "Actions" do GitHub
+name: CI Pipeline
+
+# Define os gatilhos que disparam o workflow
+on:
+  push:                      # dispara quando há push
+    branches: [ "main" ]     # apenas se o push for na branch main
+  pull_request:              # dispara também em pull requests
+    branches: [ "main" ]     # apenas se o PR for direcionado à branch main
+
+jobs:                        # Conjunto de jobs que serão executados
+  build:                     # Nome do job (build)
+    runs-on: ubuntu-latest   # Runner que vai executar (máquina virtual Ubuntu)
+
+    steps:                   # Lista de etapas dentro do job
+      - name: Checkout código
+        uses: actions/checkout@v3
+        # Essa ação oficial do GitHub baixa o código do repositório
+        # para dentro do runner, permitindo que os próximos passos usem os arquivos
+
+      - name: Testar Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml config
+          # Valida a sintaxe do arquivo docker-compose.yml
+          docker-compose -f docker-compose.yml up -d
+          # Sobe os containers em segundo plano para testar se funcionam
+          docker ps
+          # Lista os containers rodando, garantindo que subiram corretamente
