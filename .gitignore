@@ -1,9 +1,18 @@
-### Terraform ###
-# Local .terraform directories
-**/.terraform/*
-
-# .tfstate files
+# Terraform
+.terraform/
 *.tfstate
-*.tfstate.*
+*.tfstate.backup
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
 
+
+# Docker
+*.log
+*.pid
+*.sock
+
+# Arquivos sensíveis
 *.pem
+*.key
+.env

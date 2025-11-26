@@ -2,31 +2,31 @@ version: '3.9'
 
 services:
   wordpress:
-    image: wordpress:latest
+    image: wordpress:latest              # Imagem oficial do WordPress
     container_name: wordpress_app
     restart: always
     ports:
-      - "8080:80"
+      - "8080:80"                        # Porta 8080 no host → 80 no container
     environment:
-      WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: wordpress
-      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_HOST: db              # Nome do serviço do banco
+      WORDPRESS_DB_USER: wordpress       # Usuário do banco
+      WORDPRESS_DB_PASSWORD: wordpress   # Senha do banco
+      WORDPRESS_DB_NAME: wordpress       # Nome do banco
     volumes:
-      - ./wordpress_data:/var/www/html
+      - wordpress_data:/var/www/html     # Persistência dos arquivos do WordPress
 
   db:
-    image: mysql:5.7
+    image: mysql:5.7                     # Imagem oficial do MySQL
     container_name: wordpress_db
     restart: always
     environment:
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: wordpress
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: wordpress          # Cria o banco "wordpress"
+      MYSQL_USER: wordpress              # Usuário do banco
+      MYSQL_PASSWORD: wordpress          # Senha do banco
+      MYSQL_ROOT_PASSWORD: rootpassword  # Senha do usuário root
     volumes:
-      - ./db_data:/var/lib/mysql
+      - db_data:/var/lib/mysql           # Persistência dos dados do banco
 
 volumes:
-  wordpress_data:
-  db_data:
+  wordpress_data:                        # Volume para dados do WordPress
+  db_data:                               # Volume para dados do MySQL
