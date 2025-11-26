@@ -1,45 +1,26 @@
-# Nome do workflow, aparece na aba "Actions" do GitHub
-name: CD Pipeline
-
-# Define quando o workflow será disparado
-on:
-  push:                  # dispara em eventos de push
-    branches: [ "main", "teste", "develop", "master" ] # apenas quando o push for na branch "main"
-
-jobs:                    # Conjunto de jobs que serão executados
-  deploy:                # Nome do job (deploy)
-    runs-on: ubuntu-latest # Runner que vai executar (máquina virtual Ubuntu)
-
-    steps:               # Lista de etapas dentro do job
-      - name: Checkout código
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
         uses: actions/checkout@v3
-        # Essa ação oficial do GitHub baixa o código do repositório
-        # para dentro do runner, permitindo que os próximos passos usem os arquivos
+      - name: Testar Docker Compose
+        run: docker compose version
 
-      - name: Instalar Docker e Docker Compose via Ansible
-        uses: ansible/ansible-runner-action@v2
-        with:
-          playbook: ansible/install-docker.yml
-          inventory: ansible/inventory/hosts.ini
-
-      - name: Deploy para EC2 via SSH
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.7
-        # Essa ação conecta via SSH em um servidor remoto (sua instância EC2)
-        # e executa os comandos definidos em "script"
-
         with:
           host: 52.15.204.67
-          # IP ou hostname da sua instância EC2, armazenado como secret no GitHub
           username: ubuntu
-          # Usuário que será usado para login via SSH (no caso, "ubuntu")
           key: ${{ secrets.EC2_SSH_KEY }}
-          # Chave privada SSH para autenticação, também armazenada como secret
           script: |
             cd /home/ubuntu/app
-            # Entra na pasta onde está seu projeto na EC2
             git pull origin main
-            # Atualiza o código da branch main
-            docker-compose pull
-            # Baixa as últimas imagens Docker definidas no docker-compose.yml
-            docker-compose up -d
-            # Sobe os containers em modo "detached" (em segundo plano)
+            docker compose pull
+            docker compose up -d
