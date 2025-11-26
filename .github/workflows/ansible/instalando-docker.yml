@@ -12,24 +12,10 @@
         path: /home/ubuntu/app
         state: directory
 
-    - name: Instalar dependências
-      apt:
-        name:
-          - curl
-          - git
-          - apt-transport-https
-          - ca-certificates
-          - software-properties-common
-        state: present
-
-    - name: Adicionar repositório oficial do Docker
-      apt_repository:
-        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
-        state: present
-
+  
     - name: Instalar Docker
-      apt:
-        name: docker-ce
+      apt: 
+        name: docker.io
         state: present
         update_cache: yes
 
