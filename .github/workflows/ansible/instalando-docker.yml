@@ -34,6 +34,12 @@
         dest: /usr/local/bin/docker-compose
         mode: '0755'
 
+    - name: Criar pasta do projeto
+      file:
+        path: /home/ubuntu/app
+        state: directory
+
+
     - name: Clonar repositório do projeto
       git:
         repo: https://github.com/DaviPO2001/AWS-WORDPRESS-ANSIBLE.git
